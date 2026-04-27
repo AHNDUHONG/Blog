@@ -1,0 +1,9 @@
+### POST SELECT - 코드 리스트 조회
+POST http://localhost:8080/api/members/signup
+Content-Type: application/json
+
+{
+  "email": "test2@test.com",
+  "password": "1234",
+  "nickname": "테스터2"
+}
