@@ -5,6 +5,8 @@ import com.blog.backend.domain.member.Role;
 import com.blog.backend.dto.member.MemberLoginRequest;
 import com.blog.backend.dto.member.MemberLoginResponse;
 import com.blog.backend.dto.member.MemberSignUpRequest;
+import com.blog.backend.exception.BusinessException;
+import com.blog.backend.exception.ErrorCode;
 import com.blog.backend.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,7 +25,7 @@ public class MemberService {
     public void signUp(MemberSignUpRequest request) {
 
         if (memberRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+            throw new BusinessException(ErrorCode.DUPLICATE_EMAIL);
         }
 
         Member member = Member.builder()
@@ -39,10 +41,10 @@ public class MemberService {
     public MemberLoginResponse login(MemberLoginRequest request) {
 
         Member member = memberRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("이메일 또는 비밀번호가 일치하지 않습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_LOGIN));
 
         if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
-            throw new IllegalArgumentException("이메일 또는 비밀번호가 일치하지 않습니다.");
+            throw new BusinessException(ErrorCode.INVALID_LOGIN);
         }
 
         return MemberLoginResponse.from(member);
