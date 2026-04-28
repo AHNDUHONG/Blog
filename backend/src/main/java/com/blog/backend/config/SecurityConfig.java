@@ -25,7 +25,7 @@ public class SecurityConfig {
                     return configuration;
                 }))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/members/signup").permitAll()
+                        .requestMatchers("/api/members/signup", "/api/members/login").permitAll()
                         .anyRequest().permitAll()
                 )
                 .formLogin(form -> form.disable())

@@ -1,6 +1,8 @@
 package com.blog.backend.controller;
 
 
+import com.blog.backend.dto.member.MemberLoginRequest;
+import com.blog.backend.dto.member.MemberLoginResponse;
 import com.blog.backend.dto.member.MemberSignUpRequest;
 import com.blog.backend.service.MemberService;
 import jakarta.validation.Valid;
@@ -23,5 +25,11 @@ public class MemberController {
     public ResponseEntity<Void> signUp(@Valid @RequestBody MemberSignUpRequest request) {
         memberService.signUp(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<MemberLoginResponse> login(@Valid @RequestBody MemberLoginRequest request) {
+        MemberLoginResponse response = memberService.login(request);
+        return ResponseEntity.ok(response);
     }
 }
