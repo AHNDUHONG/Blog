@@ -14,13 +14,17 @@ public class MemberLoginResponse {
     private String nickname;
     private Role role;
 
-    public static MemberLoginResponse from(Member member) {
+    private String accessToken;
+    private String tokenType;
+
+    public static MemberLoginResponse of(Member member, String accessToken) {
         return MemberLoginResponse.builder()
                 .id(member.getId())
                 .email(member.getEmail())
                 .nickname(member.getNickname())
                 .role(member.getRole())
+                .accessToken(accessToken)
+                .tokenType("Bearer")
                 .build();
     }
-
 }

@@ -8,6 +8,7 @@ import com.blog.backend.dto.member.MemberSignUpRequest;
 import com.blog.backend.exception.BusinessException;
 import com.blog.backend.exception.ErrorCode;
 import com.blog.backend.repository.MemberRepository;
+import com.blog.backend.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
     public void signUp(MemberSignUpRequest request) {
@@ -47,7 +49,8 @@ public class MemberService {
             throw new BusinessException(ErrorCode.INVALID_LOGIN);
         }
 
-        return MemberLoginResponse.from(member);
+        String accessToken = jwtTokenProvider.createAccessToken(member);
 
+        return MemberLoginResponse.of(member, accessToken);
     }
 }
