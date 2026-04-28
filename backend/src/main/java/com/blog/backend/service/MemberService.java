@@ -4,6 +4,7 @@ import com.blog.backend.domain.member.Member;
 import com.blog.backend.domain.member.Role;
 import com.blog.backend.dto.member.MemberLoginRequest;
 import com.blog.backend.dto.member.MemberLoginResponse;
+import com.blog.backend.dto.member.MemberResponse;
 import com.blog.backend.dto.member.MemberSignUpRequest;
 import com.blog.backend.exception.BusinessException;
 import com.blog.backend.exception.ErrorCode;
@@ -52,5 +53,13 @@ public class MemberService {
         String accessToken = jwtTokenProvider.createAccessToken(member);
 
         return MemberLoginResponse.of(member, accessToken);
+    }
+
+    public MemberResponse getMyInfo(Long memberId) {
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
+
+        return MemberResponse.from(member);
     }
 }

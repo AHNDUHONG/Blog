@@ -1,6 +1,8 @@
 package com.blog.backend.security;
 
 import com.blog.backend.domain.member.Member;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -41,5 +43,27 @@ public class JwtTokenProvider {
                 .expiration(expiration)
                 .signWith(secretKey)
                 .compact();
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            parseClaims(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    public Long getMemberId(String token) {
+        Claims claims = parseClaims(token);
+        return Long.valueOf(claims.getSubject());
+    }
+
+    private Claims parseClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 }
