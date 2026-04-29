@@ -43,27 +43,19 @@ public class PostService {
     }
 
     @Transactional
-    public void updatePost(Long memberId, Long postId, PostUpdateRequest request) {
+    public void updatePost(Long postId, PostUpdateRequest request) {
 
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
-
-        if (!post.getAuthor().getId().equals(memberId)) {
-            throw new BusinessException(ErrorCode.FORBIDDEN_POST_ACCESS);
-        }
 
         post.update(request.getTitle(), request.getContent());
     }
 
     @Transactional
-    public void deletePost(Long memberId, Long postId) {
+    public void deletePost(Long postId) {
 
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
-
-        if (!post.getAuthor().getId().equals(memberId)) {
-            throw new BusinessException(ErrorCode.FORBIDDEN_POST_ACCESS);
-        }
 
         postRepository.delete(post);
     }

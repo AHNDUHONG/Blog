@@ -45,20 +45,16 @@ public class PostController {
 
     @PutMapping("/{postId}")
     public ResponseEntity<Void> updatePost(
-            @AuthenticationPrincipal String memberId,
             @PathVariable Long postId,
             @Valid @RequestBody PostUpdateRequest request
     ) {
-        postService.updatePost(Long.valueOf(memberId), postId, request);
+        postService.updatePost(postId, request);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePost(
-            @AuthenticationPrincipal String memberId,
-            @PathVariable Long postId
-    ) {
-        postService.deletePost(Long.valueOf(memberId), postId);
+    public ResponseEntity<Void> deletePost(@PathVariable Long postId) {
+        postService.deletePost(postId);
         return ResponseEntity.noContent().build();
     }
 }
