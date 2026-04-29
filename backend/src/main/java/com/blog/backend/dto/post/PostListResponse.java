@@ -1,6 +1,7 @@
 package com.blog.backend.dto.post;
 
 
+import com.blog.backend.domain.post.Category;
 import com.blog.backend.domain.post.Post;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +14,7 @@ public class PostListResponse {
 
     private Long id;
     private String title;
+    private Category category;
     private int viewCount;
     private String authorNickname;
     private LocalDateTime createdAt;
@@ -21,6 +23,7 @@ public class PostListResponse {
         return PostListResponse.builder()
                 .id(post.getId())
                 .title(post.getTitle())
+                .category(post.getCategory())
                 .viewCount(post.getViewCount())
                 .authorNickname(post.getAuthor().getNickname())
                 .createdAt(post.getCreatedAt())

@@ -2,6 +2,7 @@ package com.blog.backend.service;
 
 
 import com.blog.backend.domain.member.Member;
+import com.blog.backend.domain.post.Category;
 import com.blog.backend.domain.post.Post;
 import com.blog.backend.dto.common.PageResponse;
 import com.blog.backend.dto.post.PostCreateRequest;
@@ -37,6 +38,7 @@ public class PostService {
         Post post = Post.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
+                .category(request.getCategory())
                 .author(author)
                 .build();
 
@@ -51,7 +53,11 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
 
-        post.update(request.getTitle(), request.getContent());
+        post.update(
+                request.getTitle(),
+                request.getContent(),
+                request.getCategory()
+        );
     }
 
     @Transactional
@@ -63,18 +69,34 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    public PageResponse<PostListResponse> getPosts(String keyword, Pageable pageable) {
-
+    public PageResponse<PostListResponse> getPosts(
+            Category category,
+            String keyword,
+            Pageable pageable
+    ) {
         Page<Post> posts;
 
-        if (keyword == null || keyword.isBlank()) {
-            posts = postRepository.findAll(pageable);
-        } else {
+        boolean hasCategory = category !=null;
+        boolean hasKeyword = keyword != null && !keyword.isBlank();
+
+        if (hasCategory && hasKeyword) {
+            posts = postRepository.findByCategoryAndTitleContainingOrCategoryAndContentContaining(
+                    category,
+                    keyword,
+                    category,
+                    keyword,
+                    pageable
+            );
+        } else if (hasCategory) {
+            posts = postRepository.findByCategory(category, pageable);
+        } else if (hasKeyword) {
             posts = postRepository.findByTitleContainingOrContentContaining(
                     keyword,
                     keyword,
                     pageable
             );
+        } else {
+            posts = postRepository.findAll(pageable);
         }
 
         Page<PostListResponse> response = posts.map(PostListResponse::from);

@@ -1,6 +1,7 @@
 package com.blog.backend.controller;
 
 
+import com.blog.backend.domain.post.Category;
 import com.blog.backend.dto.common.PageResponse;
 import com.blog.backend.dto.post.PostCreateRequest;
 import com.blog.backend.dto.post.PostListResponse;
@@ -37,6 +38,7 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<PageResponse<PostListResponse>> getPosts(
+            @RequestParam(required = false) Category category,
             @RequestParam(required = false) String keyword,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
@@ -47,7 +49,11 @@ public class PostController {
                 Sort.by(Sort.Direction.DESC, "createdAt")
         );
 
-        PageResponse<PostListResponse> response = postService.getPosts(keyword, pageable);
+        PageResponse<PostListResponse> response = postService.getPosts(
+                category,
+                keyword,
+                pageable
+        );
 
         return ResponseEntity.ok(response);
     }

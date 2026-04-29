@@ -24,6 +24,10 @@ public class Post {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Category category;
+
     @Column(nullable = false)
     private int viewCount;
 
@@ -40,9 +44,10 @@ public class Post {
         this.viewCount++;
     }
 
-    public void update(String title, String content) {
+    public void update(String title, String content, Category category) {
         this.title = title;
         this.content = content;
+        this.category = category;
         this.updatedAt = LocalDateTime.now();
     }
 
