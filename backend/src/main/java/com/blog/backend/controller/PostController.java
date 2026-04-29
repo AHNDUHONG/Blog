@@ -1,6 +1,7 @@
 package com.blog.backend.controller;
 
 
+import com.blog.backend.dto.common.PageResponse;
 import com.blog.backend.dto.post.PostCreateRequest;
 import com.blog.backend.dto.post.PostListResponse;
 import com.blog.backend.dto.post.PostResponse;
@@ -8,6 +9,9 @@ import com.blog.backend.dto.post.PostUpdateRequest;
 import com.blog.backend.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,8 +36,19 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PostListResponse>> getPosts() {
-        List<PostListResponse> response = postService.getPosts();
+    public ResponseEntity<PageResponse<PostListResponse>> getPosts(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by(Sort.Direction.DESC, "createdAt")
+        );
+
+        PageResponse<PostListResponse> response = postService.getPosts(keyword, pageable);
+
         return ResponseEntity.ok(response);
     }
 

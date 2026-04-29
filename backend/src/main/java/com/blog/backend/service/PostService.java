@@ -3,6 +3,7 @@ package com.blog.backend.service;
 
 import com.blog.backend.domain.member.Member;
 import com.blog.backend.domain.post.Post;
+import com.blog.backend.dto.common.PageResponse;
 import com.blog.backend.dto.post.PostCreateRequest;
 import com.blog.backend.dto.post.PostListResponse;
 import com.blog.backend.dto.post.PostResponse;
@@ -12,6 +13,8 @@ import com.blog.backend.exception.ErrorCode;
 import com.blog.backend.repository.MemberRepository;
 import com.blog.backend.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,11 +63,23 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    public List<PostListResponse> getPosts() {
-        return postRepository.findAll()
-                .stream()
-                .map(PostListResponse::from)
-                .toList();
+    public PageResponse<PostListResponse> getPosts(String keyword, Pageable pageable) {
+
+        Page<Post> posts;
+
+        if (keyword == null || keyword.isBlank()) {
+            posts = postRepository.findAll(pageable);
+        } else {
+            posts = postRepository.findByTitleContainingOrContentContaining(
+                    keyword,
+                    keyword,
+                    pageable
+            );
+        }
+
+        Page<PostListResponse> response = posts.map(PostListResponse::from);
+
+        return PageResponse.from(response);
     }
 
     @Transactional

@@ -1,2 +1,1 @@
-DELETE http://localhost:8080/api/posts/3
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIzIiwiZW1haWwiOiJ0ZXN0MkB0ZXN0LmNvbSIsIm5pY2tuYW1lIjoi7YWM7Iqk7YSwMiIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzc3NDU0NzIyLCJleHAiOjE3Nzc0NTgzMjJ9.E22wbX57UGvJF-uM_APHTOy3Df7Dp4dI4CoBym_GOmbx3GWXvWDVNhcJ_YBEr40C
+GET http://localhost:8080/api/posts/3
