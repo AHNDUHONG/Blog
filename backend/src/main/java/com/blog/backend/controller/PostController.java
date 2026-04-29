@@ -4,6 +4,7 @@ package com.blog.backend.controller;
 import com.blog.backend.dto.post.PostCreateRequest;
 import com.blog.backend.dto.post.PostListResponse;
 import com.blog.backend.dto.post.PostResponse;
+import com.blog.backend.dto.post.PostUpdateRequest;
 import com.blog.backend.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -40,5 +41,24 @@ public class PostController {
     public ResponseEntity<PostResponse> getPost(@PathVariable Long postId) {
         PostResponse response = postService.getPost(postId);
         return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{postId}")
+    public ResponseEntity<Void> updatePost(
+            @AuthenticationPrincipal String memberId,
+            @PathVariable Long postId,
+            @Valid @RequestBody PostUpdateRequest request
+    ) {
+        postService.updatePost(Long.valueOf(memberId), postId, request);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<Void> deletePost(
+            @AuthenticationPrincipal String memberId,
+            @PathVariable Long postId
+    ) {
+        postService.deletePost(Long.valueOf(memberId), postId);
+        return ResponseEntity.noContent().build();
     }
 }

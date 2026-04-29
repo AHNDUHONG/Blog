@@ -6,6 +6,7 @@ import com.blog.backend.domain.post.Post;
 import com.blog.backend.dto.post.PostCreateRequest;
 import com.blog.backend.dto.post.PostListResponse;
 import com.blog.backend.dto.post.PostResponse;
+import com.blog.backend.dto.post.PostUpdateRequest;
 import com.blog.backend.exception.BusinessException;
 import com.blog.backend.exception.ErrorCode;
 import com.blog.backend.repository.MemberRepository;
@@ -39,6 +40,32 @@ public class PostService {
         Post savedPost = postRepository.save(post);
 
         return savedPost.getId();
+    }
+
+    @Transactional
+    public void updatePost(Long memberId, Long postId, PostUpdateRequest request) {
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
+
+        if (!post.getAuthor().getId().equals(memberId)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN_POST_ACCESS);
+        }
+
+        post.update(request.getTitle(), request.getContent());
+    }
+
+    @Transactional
+    public void deletePost(Long memberId, Long postId) {
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
+
+        if (!post.getAuthor().getId().equals(memberId)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN_POST_ACCESS);
+        }
+
+        postRepository.delete(post);
     }
 
     public List<PostListResponse> getPosts() {
