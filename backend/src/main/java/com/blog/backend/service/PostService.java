@@ -11,6 +11,7 @@ import com.blog.backend.dto.post.PostResponse;
 import com.blog.backend.dto.post.PostUpdateRequest;
 import com.blog.backend.exception.BusinessException;
 import com.blog.backend.exception.ErrorCode;
+import com.blog.backend.repository.CommentRepository;
 import com.blog.backend.repository.MemberRepository;
 import com.blog.backend.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public Long createPost(Long memberId, PostCreateRequest request) {
@@ -65,6 +67,8 @@ public class PostService {
 
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
+
+        commentRepository.deleteByPostId(postId);
 
         postRepository.delete(post);
     }

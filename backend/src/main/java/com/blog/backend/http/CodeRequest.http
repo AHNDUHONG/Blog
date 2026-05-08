@@ -1,1 +1,7 @@
-GET http://localhost:8080/api/posts/1
+PUT http://localhost:8080/api/comments/3
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwibmlja25hbWUiOiLthYzsiqTthLAiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NzgyMzgwNzEsImV4cCI6MTc3ODI0MTY3MX0.qAK6Pt3PSv3hQ0QM4Qttr1UDDUnA3v0H8SEoB-uYqnSsVgmWN2VdIVVjyHvQwZq8
+Content-Type: application/json
+
+{
+  "content": "수정할건데용"
+}
